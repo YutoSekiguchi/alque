@@ -3,25 +3,36 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --background-color: 255, 255, 255;
+  --main-font-color: 15, 20, 25;
+  --main-hover-color: 150, 150, 150;
+  --main-border-color: 139, 152, 165;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background-color: 21, 32, 43;
+    --main-font-color: 247, 249, 249;
+    --main-hover-color: 42, 64, 86;
+    --main-border-color: 139, 152, 165;
   }
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background-color: rgb(var(--background-color));
+  color: rgb(var(--main-font-color));
+}
+
+.header-icon {
+  color: rgb(var(--main-font-color));
+  width: 30px;
+  height: 30px;
+}
+
+.header-icon-wrapper:hover {
+  background: rgb(var(--main-hover-color));
+}
+
+.border-right {
+  border-right: 0.2px solid rgb(var(--main-border-color));
 }
