@@ -1,0 +1,66 @@
+version: "3"
+services:
+  mysql:
+    container_name: alque-mysql
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    env_file: ./.env
+    environment:
+      TZ: "Asia/Tokyo"
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+    volumes:
+      - ./db/data:/var/lib/mysql
+    ports:
+      - "7132:3306"
+    networks:
+      - alque
+
+  phpmyadmin:
+    container_name: alque-phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 7133:80
+    env_file: ./.env
+    depends_on:
+      - mysql
+    networks:
+      - alque
+
+  api:
+    container_name: alque-api
+    build:
+      context: ./api
+      dockerfile: dev.Dockerfile
+    env_file: ./.env
+    volumes:
+      - ./api/:/app
+    ports:
+      - 7131:8080
+    depends_on:
+      - mysql
+    networks:
+      - alque
+
+  client:
+    container_name: alque-client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    env_file: ./.env
+    volumes:
+      - ./client:/app
+    ports:
+      - "7130:3000"
+    depends_on:
+      - api
+    networks:
+      - alque
+    tty: true
+
+volumes:
+  mysql:
+
+networks:
+  alque:
+    driver: bridge
