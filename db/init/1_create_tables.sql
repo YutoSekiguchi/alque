@@ -32,7 +32,6 @@ CREATE TABLE IF NOT EXISTS questions (
   uid INT NOT NULL,
   tid INT NOT NULL,
   question_image_url TEXT NOT NULL,
-  answer_image_url TEXT NOT NULL,
   question_sentence TEXT NOT NULL,
   comment TEXT,
   hint TEXT,
