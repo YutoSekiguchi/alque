@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"gorm.io/gorm"
 
-	// "github.com/YutoSekiguchi/alque/util"
+	"github.com/YutoSekiguchi/alque/controller"
 )
 
 func InitRouter(db *gorm.DB) {
@@ -19,10 +19,17 @@ func InitRouter(db *gorm.DB) {
 	}))
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:3000"},
+		AllowOrigins: []string{"http://localhost:3000", "http://localhost:7130", "https://vps7.nkmr.io", "http://vps7.nkmr.io"},
 		AllowHeaders: []string{echo.HeaderAuthorization, echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
-	// ctrl := controller.NewController(db)
+	ctrl := controller.NewController(db)
+
+	user := e.Group("/users")
+	{
+		user.POST("", ctrl.HandlePostUser)
+		user.GET("/:uid", ctrl.HandleGetUserByID)
+		user.GET("/me", ctrl.HandleGetUserByEmail)
+	}
 
 	// Routing
 	e.GET("/", func(c echo.Context) error {
