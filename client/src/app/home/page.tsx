@@ -1,7 +1,9 @@
+import Title from "../components/common/title";
+
 const Home: () => JSX.Element = () => {
   return (
-    <div>
-      aaa
+    <div className="main">
+      <Title title={"ホーム"} />
     </div>
   );
 }
