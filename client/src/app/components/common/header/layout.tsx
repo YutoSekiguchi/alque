@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from 'next/link';
 import ChangeIcon from "./change_icon";
 import UserButton from "./user_button";
+import NewButton from "./new_button";
 
 const Header: () => JSX.Element = () => {
 
@@ -25,6 +26,9 @@ const Header: () => JSX.Element = () => {
               <Link href="/settings">
                 <ChangeIcon type="settings" />
               </Link>
+            </li>
+            <li className="my-4">
+              <NewButton />
             </li>
           </ul>
         </div>

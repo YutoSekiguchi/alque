@@ -23,6 +23,10 @@ body {
   color: rgb(var(--main-font-color));
 }
 
+.main {
+  padding: 1rem;
+}
+
 .header-icon {
   color: rgb(var(--main-font-color));
   width: 30px;
