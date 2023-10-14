@@ -60,6 +60,34 @@ func (s UserService) Authenticate(authHeader string, db *gorm.DB, c echo.Context
 	return u, nil
 }
 
+// 認証機能の追加
+func (s UserService) PostAuthenticate(authHeader string, db *gorm.DB, c echo.Context) error {
+	// Authorizationヘッダが空または"Basic "で始まらない場合は認証エラー
+	if authHeader == "" || !strings.HasPrefix(authHeader, "Basic ") {
+		return c.JSON(http.StatusUnauthorized, map[string]string{ 	
+			"message":"Authentication Failed",
+		})
+	}
+
+	// "Basic "を削除してBase64デコード
+	authValue := strings.TrimPrefix(authHeader, "Basic ")
+	decodedAuth, err := base64.StdEncoding.DecodeString(authValue)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, map[string]string{ 	
+			"message":"Authentication Failed",
+		})
+	}
+
+	appPass := string(decodedAuth)
+	APP_PASS := os.Getenv("APP_PASS")
+	if appPass != APP_PASS {
+		return c.JSON(http.StatusUnauthorized, map[string]string{
+			"message": "Authentication Failed",
+		})
+	}
+	return nil
+}
+
 // GET
 // uidによって取得
 func (s UserService) GetUserByID(db *gorm.DB, c echo.Context) (*User, error) {
@@ -97,7 +125,11 @@ func (s UserService) GetUserByEmail(db *gorm.DB, c echo.Context) (*User, error) 
 
 // POST
 func (s UserService) PostUser(db *gorm.DB, c echo.Context) (User, error) {
+	authHeader := c.Request().Header.Get("Authorization")
 	var user User
+	if err := s.PostAuthenticate(authHeader, db, c); err != nil {
+		return user, err
+	}
 	c.Bind(&user)
 
 	if err := db.Create(&user).Error; err != nil {
