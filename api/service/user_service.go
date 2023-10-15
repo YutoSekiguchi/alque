@@ -108,12 +108,12 @@ func (s UserService) GetUserByID(db *gorm.DB, c echo.Context) (*User, error) {
 // メアドによって情報取得
 func (s UserService) GetUserByEmail(db *gorm.DB, c echo.Context) (*User, error) {
 	authHeader := c.Request().Header.Get("Authorization")
+	mail := c.QueryParam("mail")
 	authUser, err := s.Authenticate(authHeader, db, c)
-	if authUser != nil {
+	if authUser == nil {
 		return nil, err
 	}
 	user := new(User)
-	mail := c.QueryParam("Mail")
 	if authUser.Mail != mail {
 		return nil, c.JSON(http.StatusBadRequest, map[string]string{"message":"No Match mail"})
 	} 
