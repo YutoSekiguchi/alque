@@ -1,6 +1,8 @@
+import { IDAndCreatedAtType } from "./common";
+
 export interface PostMemberDataType {
-  uid: number;
-  tid: number;
+  UID: number;
+  TID: number;
 }
 
 export interface MemberDataType extends PostMemberDataType, IDAndCreatedAtType {}

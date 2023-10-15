@@ -1,4 +1,4 @@
 export interface IDAndCreatedAtType {
-  id: number;
-  createdAt: string;
+  ID: number;
+  CreatedAt: string;
 }

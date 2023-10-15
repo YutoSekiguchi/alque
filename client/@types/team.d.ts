@@ -1,8 +1,10 @@
+import { IDAndCreatedAtType } from "./common";
+
 export interface PostTeamDataType {
-  name: string;
-  password: string;
-  detail: string;
-  image: string;
+  Name: string;
+  Password: string;
+  Detail: string;
+  Image: string;
 }
 
 export interface TeamDataType extends PostTeamDataType, IDAndCreatedAtType {}
