@@ -23,6 +23,11 @@ const Header: () => JSX.Element = () => {
               </Link>
             </li>
             <li className="mb-2 w-10 h-10 header-icon-wrapper flex items-center justify-center rounded-full mx-auto">
+              <Link href="/group">
+                <ChangeIcon type="group" />
+              </Link>
+            </li>
+            <li className="mb-2 w-10 h-10 header-icon-wrapper flex items-center justify-center rounded-full mx-auto">
               <Link href="/settings">
                 <ChangeIcon type="settings" />
               </Link>
