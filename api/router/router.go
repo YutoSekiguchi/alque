@@ -31,6 +31,21 @@ func InitRouter(db *gorm.DB) {
 		user.GET("/me", ctrl.HandleGetUserByEmail)
 	}
 
+	member := e.Group("/members")
+	{
+		member.POST("", ctrl.HandlePostMember)
+		member.GET("/uid/:uid", ctrl.HandleGetMembersByUID)
+		member.GET("/tid/:tid", ctrl.HandleGetMembersByTID)
+	}
+
+	team := e.Group("/teams")
+	{
+		team.POST("", ctrl.HnadlePostTeam)
+		team.GET("", ctrl.HandleGetAllTeams)
+		team.GET("/:id", ctrl.HandleGetTeamByID)
+		team.GET("/auth/:id/:password", ctrl.HandleGetTeamByIDAndPassword)
+	}
+
 	// Routing
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, Echo!")
