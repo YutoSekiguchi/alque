@@ -23,13 +23,12 @@ export const options: NextAuthOptions = {
         return Promise.resolve(false);
       }
       const data: PostUserDataType = {
-        name: profile.name!,
-        displayName: profile.name!,
-        mail: profile.email!,
-        image: params.user.image!,
-        dark: 0,
+        Name: profile.name!,
+        DisplayName: profile.name!,
+        Mail: profile.email!,
+        Image: params.user.image!,
+        Dark: 0,
       }
-      console.log(data);
       const userData = await signin(data);
       // TODO: imageが違う場合の処理も記述
       if(userData === null || userData === undefined) {

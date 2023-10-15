@@ -1,10 +1,30 @@
 "use client";
 
+import { userAtom } from '@/jotai/user';
+import { getUserByMail } from '@/services/user';
+import { useAtom } from 'jotai';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import Image from 'next/image';
+import { useEffect } from 'react';
 
 const UserButton: () => JSX.Element = () => {
   const { data: session } = useSession();
+  const [user, setUser] = useAtom(userAtom);
+
+  useEffect(() => {
+    const getUserData = async() => {
+      if (session && session.user?.email !== null && session.user && session.user.email) {
+        const res = await getUserByMail(session.user.email);
+        if (res === null || user !== null) {
+          return;
+        }
+        setUser(res);
+      }
+    }
+    getUserData();
+    console.log(user);
+  }, [session])
+
   return(
     <>
     {
@@ -18,7 +38,7 @@ const UserButton: () => JSX.Element = () => {
               height={40}
               className='rounded-full cursor-pointer mx-auto'
             />
-            {/* <button onClick={() => signOut()}>ログアウト</button> */}
+            <button onClick={() => signOut()}>ログアウト</button>
           </div>
         :
         <div>

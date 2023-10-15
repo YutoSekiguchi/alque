@@ -1,7 +1,7 @@
-import { APP_PASS } from "@/settings/settings";
 import { PostUserDataType } from "../../@types/user";
 
 const USER_API_URL = `${process.env.API_URL}/users`;
+const APP_PASS = process.env.APP_PASS;
 
 export const getUserByMail = async(mail: string) => {
   const url = `${USER_API_URL}/me?mail=${mail}`;
@@ -27,12 +27,15 @@ export const getUserByMail = async(mail: string) => {
 
 export const signin = async(data: PostUserDataType) => {
   let isExist = false;
-  const existUser = await getUserByMail(data.mail);
+  const existUser = await getUserByMail(data.Mail);
   if (existUser !== null) {
     isExist = true;
   }
   if (!isExist) {
     const url = `${USER_API_URL}`;
+    if (APP_PASS === undefined) {
+      return;
+    }
     try {
       const response = await fetch(url, {
         method: "POST",
