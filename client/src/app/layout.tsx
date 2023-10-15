@@ -26,7 +26,7 @@ export default function RootLayout({
           <SessionProvider session={session}>
             <div className='flex'>
               <Header />
-              <div className='ml-20'>
+              <div className='ml-20 w-full'>
                 {children}
               </div>
             </div>
