@@ -1,1 +1,0 @@
-export const APP_PASS: string = process.env.APP_PASS? process.env.APP_PASS: "";
