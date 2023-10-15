@@ -22,8 +22,7 @@ const UserButton: () => JSX.Element = () => {
       }
     }
     getUserData();
-    console.log(user);
-  }, [session])
+  }, [session?.user])
 
   return(
     <>
