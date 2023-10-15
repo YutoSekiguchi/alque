@@ -7,8 +7,8 @@ import (
 // Qusetionテーブルの構成
 type Question struct {
 	ID               int       `gorm:"primary_key;not null;autoIncrement:true"`
-	UID              int       `gorm:"not null"`
-	TID              int       `gorm:"not null"`
+	UID              int       `gorm:"column:uid"`
+	TID              int       `gorm:"column:tid"`
 	QuestionImageUrl string    `gorm:"type:text;not null"`
 	AnswerImageUrl   string    `gorm:"type:text;not null"`
 	QuestionSentence string    `gorm:"type:text;not null"`
