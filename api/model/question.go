@@ -10,6 +10,7 @@ type Question struct {
 	UID              int       `gorm:"not null"`
 	TID              int       `gorm:"not null"`
 	QuestionImageUrl string    `gorm:"type:text;not null"`
+	AnswerImageUrl   string    `gorm:"type:text;not null"`
 	QuestionSentence string    `gorm:"type:text;not null"`
 	Comment          string    `gorm:"type:text;"`
 	Hint             string    `gorm:"type:text;"`
