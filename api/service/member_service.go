@@ -13,7 +13,7 @@ func (s MemberService) GetMembersByUID(db *gorm.DB, c echo.Context) ([]Member, e
 	var member []Member
 	uid := c.Param("uid")
 
-	if err := db.Table("members").Where("uid = ?", uid).First(&member).Error; err != nil {
+	if err := db.Table("members").Where("uid = ?", uid).Find(&member).Error; err != nil {
 		return member, err
 	}
 	return member, nil
@@ -24,7 +24,7 @@ func (s MemberService) GetMembersByTID(db *gorm.DB, c echo.Context) ([]Member, e
 	var member []Member
 	tid := c.Param("tid")
 
-	if err := db.Table("members").Where("tid = ?", tid).First(&member).Error; err != nil {
+	if err := db.Table("members").Where("tid = ?", tid).Find(&member).Error; err != nil {
 		return member, err
 	}
 	return member, nil
