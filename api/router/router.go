@@ -42,8 +42,8 @@ func InitRouter(db *gorm.DB) {
 	{
 		team.POST("", ctrl.HnadlePostTeam)
 		team.GET("", ctrl.HandleGetAllTeams)
-		team.GET("/:id", ctrl.HandleGetTeamByID)
-		team.GET("/auth/:id/:password", ctrl.HandleGetTeamByIDAndPassword)
+		team.GET("/:tid", ctrl.HandleGetTeamByID)
+		team.GET("/auth/:tid/:password", ctrl.HandleGetTeamByIDAndPassword)
 	}
 
 	// Routing
