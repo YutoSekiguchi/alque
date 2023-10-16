@@ -13,7 +13,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background-color: 21, 32, 43;
-    --dialog-background-color: 255, 255, 255;
+    --dialog-background-color: 127, 127, 127;
     --main-font-color: 247, 249, 249;
     --main-hover-color: 42, 64, 86;
     --main-border-color: 139, 152, 165;
@@ -30,7 +30,7 @@ body {
 }
 
 .dialog-background {
-  background: rgba(var(--dialog-background-color), 0.3);
+  background: rgba(var(--dialog-background-color), 0.2);
 }
 .dialog {
   background-color: rgb(var(--background-color));
