@@ -46,6 +46,14 @@ func InitRouter(db *gorm.DB) {
 		team.GET("/auth/:tid/:password", ctrl.HandleGetTeamByIDAndPassword)
 	}
 
+	question := e.Group("/questions")
+	{
+		question.POST("", ctrl.HandlePostQuestion)
+		question.GET("/:id", ctrl.HandleGetQuestionByID)
+		question.GET("/tid/:tid", ctrl.HandleGetQuestionsByTID)
+		question.PUT("/:id", ctrl.HandlePutQuestion)
+	}
+
 	// Routing
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, Echo!")
