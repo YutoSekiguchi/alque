@@ -49,3 +49,23 @@ body {
 .border-right {
   border-right: 0.2px solid rgb(var(--main-border-color));
 }
+
+/* Group List */
+.group-list {
+  max-width: calc(100vw - 7rem);
+}
+.group-list-detail {
+  width: 70%;
+}
+.group-list-image {
+  width: 10%;
+}
+.group-list-apply {
+  width: 20%;
+}
+.group-list-name {
+  width: 30%;
+}
+.group-list-description {
+  width: 70%;
+}
