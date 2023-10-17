@@ -10,7 +10,7 @@ const NewButton: () => JSX.Element = () => {
   }
   return(
     <>
-        <button className='rounded-full bg-blue-400 w-12 h-12 text-white' onClick={moveNewPage}>
+        <button className='rounded-full bg-blue-400 w-12 h-12 text-white hover:bg-blue-500' onClick={moveNewPage}>
           <BxListPlus className='w-6 h-6 mx-auto' />
         </button>
     </>
