@@ -44,6 +44,19 @@ func (ctrl Controller) HandleGetTeamByIDAndPassword(c echo.Context) error {
 	}
 }
 
+// uidからteamの取得
+func (ctrl Controller) HandleGetTeamByUID(c echo.Context) error {
+	var s service.TeamService
+	p, err := s.GetTeamByUID(ctrl.Db, c)
+	
+	if err != nil {
+		fmt.Println(err)
+		return c.JSON(http.StatusNotFound, err.Error())
+	} else {
+		return c.JSON(200, p)
+	}
+}
+
 func (ctrl Controller) HnadlePostTeam(c echo.Context) error {
 	var s service.TeamService
 	p, err := s.PostTeam(ctrl.Db, c)

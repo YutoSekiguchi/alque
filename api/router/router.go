@@ -44,6 +44,7 @@ func InitRouter(db *gorm.DB) {
 		team.GET("", ctrl.HandleGetAllTeams)
 		team.GET("/:tid", ctrl.HandleGetTeamByID)
 		team.GET("/auth/:tid/:password", ctrl.HandleGetTeamByIDAndPassword)
+		team.GET("/uid/:uid", ctrl.HandleGetTeamByUID)
 	}
 
 	question := e.Group("/questions")

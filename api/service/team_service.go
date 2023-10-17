@@ -41,6 +41,18 @@ func (s TeamService) GetTeamByIDAndPassword(db *gorm.DB, c echo.Context) (Team, 
 	return team, nil
 }
 
+// uidからteamの取得
+func (s TeamService) GetTeamByUID(db *gorm.DB, c echo.Context) (TeamWithoutPassword, error) {
+	var team TeamWithoutPassword
+	uid := c.Param("uid")
+
+	//membersテーブルをjoinして、uidが一致するteamを取得
+	if err := db.Table("teams").Select("teams.id, teams.name, teams.detail, teams.image, teams.created_at").Joins("JOIN members ON teams.id = members.tid").Where("members.uid = ?", uid).First(&team).Error; err!=nil {
+		return team, err
+	}
+	return team, nil
+}
+
 
 // POST
 func (s TeamService) PostTeam(db *gorm.DB, c echo.Context) (Team, error) {
