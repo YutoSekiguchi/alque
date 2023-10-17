@@ -93,7 +93,7 @@ func (s UserService) PostAuthenticate(authHeader string, db *gorm.DB, c echo.Con
 func (s UserService) GetUserByID(db *gorm.DB, c echo.Context) (*User, error) {
 	authHeader := c.Request().Header.Get("Authorization")
 	authUser, err := s.Authenticate(authHeader, db, c)
-	if authUser != nil {
+	if authUser == nil {
 		return nil, err
 	}
 	user := new(User)
