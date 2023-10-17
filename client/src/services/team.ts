@@ -56,7 +56,7 @@ export const getTeamByIDAndPassword = async (tid: number, password: string) => {
   }
 };
 
-const getTeamsByUID = async (uid: number) => {
+export const getTeamsByUID = async (uid: number) => {
   const url = `${TEAM_API_URL}/uid/${uid}`;
   try {
     const response = await fetch(url, {
