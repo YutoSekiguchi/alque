@@ -23,6 +23,8 @@
 body {
   background-color: rgb(var(--background-color));
   color: rgb(var(--main-font-color));
+  word-break: break-all;
+  overflow-wrap: break-word;
 }
 
 .main {
