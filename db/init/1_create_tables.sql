@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS questions (
   answer_image_url TEXT NOT NULL,
   question_level FLOAT NOT NULL,
   question_sentence TEXT NOT NULL,
+  answer_sentence TEXT NOT NULL,
   comment TEXT,
   hint TEXT,
   date TEXT NOT NULL,

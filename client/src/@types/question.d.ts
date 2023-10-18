@@ -6,6 +6,8 @@ export interface PostQuestionDataType {
   QuestionImageURL: string;
   AnswerImageURL: string;
   QuestionSentence: string;
+  AnswerSentence: string;
+  QuestionLevel: number;
   Comment?: string;
   Hint?: string;
   Date: string;

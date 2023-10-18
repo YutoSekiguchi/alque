@@ -13,6 +13,7 @@ type Question struct {
 	AnswerImageUrl   string    `gorm:"type:text;not null"`
 	QuestionLevel    float64   `gorm:"column:question_level;not null"`
 	QuestionSentence string    `gorm:"type:text;not null"`
+	AnswerSentence   string    `gorm:"type:text;not null"`
 	Comment          string    `gorm:"type:text;"`
 	Hint             string    `gorm:"type:text;"`
 	Date             string    `gorm:"type:text;not null"`
