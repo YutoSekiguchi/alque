@@ -76,6 +76,30 @@ func (s QuestionService) GetQuestionsByTID(db *gorm.DB, c echo.Context) ([]Quest
 	return question, nil
 }
 
+// uidからmemberの中のtid（複数ある可能性がある）を取得して、そのtid群からquestionを取得
+func (s QuestionService) GetQuestionsInMyTeams(db *gorm.DB, c echo.Context) ([]Question, error) {
+	authHeader := c.Request().Header.Get("Authorization")
+	u, err := new(UserService).Authenticate(authHeader, db, c)
+	if u == nil {
+		return nil, err
+	}
+	var member []Member
+	var question []Question
+	uid := c.Param("uid")
+	if err := db.Table("members").Where("uid = ?", uid).Find(&member).Error; err != nil {
+		return nil, err
+	}
+	var tids []int
+	for _, m := range member {
+		tids = append(tids, m.TID)
+	}
+	tids = append(tids, 0)
+	if err := db.Table("questions").Where("tid IN ?", tids).Find(&question).Error; err != nil {
+		return question, err
+	}
+	return question, nil
+}
+
 // POST
 func (s QuestionService) PostQuestion(db *gorm.DB, c echo.Context) (*Question, error) {
 	// authentification

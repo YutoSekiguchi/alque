@@ -34,6 +34,19 @@ func (ctrl Controller) HandleGetQuestionsByTID(c echo.Context) error {
 	}
 }
 
+// HandleGetQuestionsInMyTeams GET /questions/in/teams/uid/:uid uidが一致する質問を取得
+func (ctrl Controller) HandleGetQuestionsInMyTeams(c echo.Context) error {
+	var s service.QuestionService
+	p, err := s.GetQuestionsInMyTeams(ctrl.Db, c)
+
+	if err != nil {
+		fmt.Println(err)
+		return c.JSON(http.StatusNotFound, err.Error())
+	} else {
+		return c.JSON(200, p)
+	}
+}
+
 // HandlePostQuestion POST /questions 質問の追加
 func (ctrl Controller) HandlePostQuestion(c echo.Context) error {
 	var s service.QuestionService

@@ -52,6 +52,7 @@ func InitRouter(db *gorm.DB) {
 		question.POST("", ctrl.HandlePostQuestion)
 		question.GET("/:id", ctrl.HandleGetQuestionByID)
 		question.GET("/tid/:tid", ctrl.HandleGetQuestionsByTID)
+		question.GET("/in/teams/uid/:uid", ctrl.HandleGetQuestionsInMyTeams)
 		question.PUT("/:id", ctrl.HandlePutQuestion)
 	}
 
