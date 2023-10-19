@@ -78,7 +78,7 @@ const GroupListLayout: (props: Props) => JSX.Element = (props: Props) => {
               :
               <div className="group-list-element flex items-center py-2 px-4 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600 border-gray-300 border-2 mt-2 cursor-pointer h-16 w-full" onClick={() => handleClickGroup(group)}>
                 <div className="group-list-image mr-2">
-                  <img src={group.Image===""? "/no-group-img.png": group.Image} alt="グループ画像" className="max-w-[30px] max-h-[30px]" />
+                  <img src={group.Image===""? "/no-group-img.png": group.Image} alt="グループ画像" className="w-[30px] h-[30px] rounded-full" />
                 </div>
                 <div className="group-list-detail flex items-center">
                   <div className="group-list-name text-md font-bold overflow-x-hidden truncate whitespace-nowrap">

@@ -18,7 +18,7 @@ const AutoDialog: (props: Props) => JSX.Element = (props: Props) => {
 
   return(
     <div
-      className="fixed top-0 left-0 w-full h-full dialog-background"
+      className="fixed top-0 left-0 w-full h-full dialog-background z-50"
       id="exampleModal"
     >
       <div className="dialog p-6 rounded-xl my-32 mx-auto w-2/4 text-center">
