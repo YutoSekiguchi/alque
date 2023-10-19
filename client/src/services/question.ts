@@ -49,6 +49,29 @@ export const getQuestionsByTID = async (tid: number, mail: string) => {
   }
 }
 
+// uidから自分が所属するチームの問題を取得
+export const getQuestionsInMyTeams = async (uid: number, mail: string) => {
+  const url = `${QUESTION_API_URL}/in/teams/uid/${uid}`;
+  try {
+    const base64Credentials = btoa(`${APP_PASS}:${mail}`);
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Basic ${base64Credentials}`,
+      },
+    });
+    if (!response.ok) {
+      console.log(response);
+      return null;
+    }
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("There was an error!", error);
+    return null;
+  }
+}
+
 // 問題の追加
 export const postQuestion = async (data: PostQuestionDataType, mail: string) => {
   const url = `${QUESTION_API_URL}`;
