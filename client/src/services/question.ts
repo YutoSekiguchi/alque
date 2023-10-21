@@ -50,8 +50,8 @@ export const getQuestionsByTID = async (tid: number, mail: string) => {
 }
 
 // uidから自分が所属するチームの問題を取得
-export const getQuestionsInMyTeams = async (uid: number, mail: string) => {
-  const url = `${QUESTION_API_URL}/in/teams/uid/${uid}`;
+export const getQuestionsInMyTeams = async (mail: string) => {
+  const url = `${QUESTION_API_URL}/in/teams`;
   try {
     const base64Credentials = btoa(`${APP_PASS}:${mail}`);
     const response = await fetch(url, {

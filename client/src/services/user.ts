@@ -25,6 +25,29 @@ export const getUserByMail = async (mail: string) => {
   }
 };
 
+// uidからユーザーを取得
+export const getUserByID = async (uid: number, mail: string) => {
+  const url = `${USER_API_URL}/${uid}`;
+  try {
+    const base64Credentials = btoa(`${APP_PASS}:${mail}`);
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Basic ${base64Credentials}`,
+      },
+    });
+    if (!response.ok) {
+      console.log(response);
+      return null;
+    }
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("There was an error!", error);
+    return null;
+  }
+};
+
 export const signin = async (data: PostUserDataType) => {
   let isExist = false;
   const existUser = await getUserByMail(data.Mail);
