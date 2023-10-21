@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -76,8 +77,15 @@ func (s QuestionService) GetQuestionsByTID(db *gorm.DB, c echo.Context) ([]Quest
 	return question, nil
 }
 
-// uidからmemberの中のtid（複数ある可能性がある）を取得して、そのtid群からquestionを取得
-func (s QuestionService) GetQuestionsInMyTeams(db *gorm.DB, c echo.Context) ([]Question, error) {
+// questionとuserとTeamWithoutPasswordを組み合わせた構造体の定義
+type QuestionWithUser struct {
+	Question Question
+	User User
+	TeamWithoutPassword TeamWithoutPassword
+}
+
+// uidからmemberの中のtid（複数ある可能性がある）を取得して、そのtid群からquestionとuserを組み合わせたものを取得
+func (s QuestionService) GetQuestionsInMyTeams(db *gorm.DB, c echo.Context) ([]QuestionWithUser, error) {
 	authHeader := c.Request().Header.Get("Authorization")
 	u, err := new(UserService).Authenticate(authHeader, db, c)
 	if u == nil {
@@ -85,20 +93,35 @@ func (s QuestionService) GetQuestionsInMyTeams(db *gorm.DB, c echo.Context) ([]Q
 	}
 	var member []Member
 	var question []Question
-	uid := c.Param("uid")
-	if err := db.Table("members").Where("uid = ?", uid).Find(&member).Error; err != nil {
+	var questionWithUser []QuestionWithUser
+	if err := db.Table("members").Where("uid = ?", u.ID).Find(&member).Error; err != nil {
 		return nil, err
 	}
-	var tids []int
+	fmt.Println(member)
+	// tidのリストの作成最初の要素は0で
+	tidList := []string{"0"}
 	for _, m := range member {
-		tids = append(tids, m.TID)
+		tidList = append(tidList, string(rune(m.TID)))
 	}
-	tids = append(tids, 0)
-	if err := db.Table("questions").Where("tid IN ?", tids).Find(&question).Error; err != nil {
-		return question, err
+
+	if err := db.Table("questions").Where("tid IN ?", tidList).Find(&question).Error; err != nil {
+		return questionWithUser, err
 	}
-	return question, nil
+	for _, q := range question {
+		var user User
+		if err := db.Table("users").Where("id = ?", q.UID).Find(&user).Error; err != nil {
+			return questionWithUser, err
+		}
+		var teamWithoutPassword TeamWithoutPassword
+		if err := db.Table("teams").Where("id = ?", q.TID).Find(&teamWithoutPassword).Error; err != nil {
+			return questionWithUser, err
+		}
+		
+		questionWithUser = append(questionWithUser, QuestionWithUser{q, user, teamWithoutPassword})
+	}
+	return questionWithUser, nil
 }
+
 
 // POST
 func (s QuestionService) PostQuestion(db *gorm.DB, c echo.Context) (*Question, error) {
