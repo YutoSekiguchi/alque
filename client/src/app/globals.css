@@ -51,6 +51,9 @@ body {
 .border-right {
   border-right: 0.2px solid rgb(var(--main-border-color));
 }
+.border-bottom {
+  border-bottom: 0.2px solid rgb(var(--main-border-color));
+}
 
 /* Group List */
 .group-list {
