@@ -98,11 +98,13 @@ func (s QuestionService) GetQuestionsInMyTeams(db *gorm.DB, c echo.Context) ([]Q
 		return nil, err
 	}
 	fmt.Println(member)
-	// tidのリストの作成最初の要素は0で
-	tidList := []string{"0"}
+	// tidのリストを作成
+	var tidList []int
 	for _, m := range member {
-		tidList = append(tidList, string(rune(m.TID)))
+		tidList = append(tidList, m.TID)
 	}
+	// tidリストに0追加
+	tidList = append(tidList, 0)
 
 	if err := db.Table("questions").Where("tid IN ?", tidList).Find(&question).Error; err != nil {
 		return questionWithUser, err
