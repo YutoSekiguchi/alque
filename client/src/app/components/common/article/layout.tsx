@@ -3,12 +3,14 @@ import { UserDataType } from "@/@types/user";
 import { useState } from "react";
 import StarsLayout from "./stars/layout";
 import ModalImageLayout from "../modal_image/layout";
+import MoveAnswerPageButton from "./move_answer_page_button/layout";
 
 interface Props {
   user: UserDataType;
   group: TeamDataWithoutPasswordType;
+  questionID: number;
   questionImageUrl: string;
-  answerImageUrl?: string;
+  answerImageUrl: string;
   questionContext: string;
   questionComment?: string;
   questionHint?: string;
@@ -18,7 +20,7 @@ interface Props {
 }
 
 const QuestionCard: (props: Props) => JSX.Element = (props: Props) => {
-  const { user, group, questionImageUrl, answerImageUrl, questionDate, questionContext, questionComment, questionHint, type, questionLevel } = props;
+  const { user, group, questionID, questionImageUrl, answerImageUrl, questionDate, questionContext, questionComment, questionHint, type, questionLevel } = props;
 
   const MAX_CONTEXT_LENGTH = 130;
 
@@ -32,7 +34,7 @@ const QuestionCard: (props: Props) => JSX.Element = (props: Props) => {
 
   return(
     <div>
-      <div className="group-question-card flex w-full">
+      <div className="group-question-card flex w-full border-bottom pl-3 pr-4 py-3">
         <div className="group-question-card__user-image w-[40px] mr-3">
           {
             (user !== null && user.Image !== null) &&
@@ -49,7 +51,7 @@ const QuestionCard: (props: Props) => JSX.Element = (props: Props) => {
           </div>
         </div>
         <div className="group-question-card__body max-w-[99%]">
-          <div className="group-question-card__body__question-context text-sm whitespace-pre-wrap">
+          <div className="group-question-card__body__question-context whitespace-pre-wrap">
             {displayQuestionContext}
           </div>
           {
@@ -59,7 +61,7 @@ const QuestionCard: (props: Props) => JSX.Element = (props: Props) => {
             </div>
             )
           }
-          <div className="group-question-card__body__question-image max-w-[99%] mt-4 mb-1">
+          <div className="group-question-card__body__question-image w-[99%] mt-4 mb-1 bg-black rounded-xl">
             {questionImageUrl!=="" &&
               <ModalImageLayout
                 imageURL={questionImageUrl}
@@ -79,21 +81,38 @@ const QuestionCard: (props: Props) => JSX.Element = (props: Props) => {
               {questionHint}
             </div>
           }
-          <div className="group-question-card__body__group flex items-center justify-between">
+          <div className="group-question-card__body__group flex items-center justify-between mt-1 mb-2">
             <div className="flex items-center">
-            <p className="text-xs">難易度</p>
-            <StarsLayout
-              questionLevel={questionLevel}
-              size={4}
-            />
-            </div>
-            <div className="flex items-center">
-              <div className="group-question-card__body__group__name text-xs mr-1 text-gray-600 dark:text-gray-400">
-                @{group.ID != 0 ?group.Name: "全体"}
+              <div className="mr-2 flex items-center">
+                <div className="group-question-card__body__group__name text-xs mr-1 text-gray-600 dark:text-gray-400">
+                  @{group && group.ID != 0 ?group.Name: "全体"}
+                </div>
+                <img src={group && group.ID != 0 ?group.Image === ""? "/no-group-img.png": group.Image: "/all.jpg"} alt="グループ画像" className="w-[14px] h-[14px] rounded-full" />
               </div>
-              <img src={group.ID != 0 ?group.Image === ""? "/no-group-img.png": group.Image: "/all.jpg"} alt="グループ画像" className="w-[14px] h-[14px] rounded-full" />
+              <p className="text-xs">難易度</p>
+              <StarsLayout
+                questionLevel={questionLevel}
+                size={4}
+              />
             </div>
           </div>
+          {
+            type === "prod" &&  
+            <div>
+              <MoveAnswerPageButton 
+                user={user}
+                group={group}
+                questionID={questionID}
+                questionImageUrl={questionImageUrl}
+                answerImageUrl={answerImageUrl}
+                questionContext={questionContext}
+                questionComment={questionComment}
+                questionHint={questionHint}
+                questionLevel={questionLevel}
+                questionDate={questionDate}
+              />
+            </div>
+          }
         </div>
         </div>
       </div>

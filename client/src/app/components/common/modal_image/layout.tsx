@@ -19,11 +19,14 @@ const ModalImageLayout: (props: Props) => JSX.Element = (props: Props) => {
 
   return(
     <div>
-      <img src={imageURL} alt={alt} onClick={handleShowModal} className="rounded-xl" />
+      {
+        imageURL!==""&&
+        <img src={imageURL} alt={alt} onClick={handleShowModal} className="rounded-xl max-h-[400px] mx-auto" /> 
+      }
       {
         isShowModal&&
-        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex justify-center items-center" onClick={handleCloseModal}>
-          <img src={imageURL} alt={alt} className="rounded-xl" />
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex justify-center items-center overflow-scroll" onClick={handleCloseModal}>
+          <img src={imageURL} alt={alt} className="rounded-xl w-[65%]" />
         </div>
       }
     </div>

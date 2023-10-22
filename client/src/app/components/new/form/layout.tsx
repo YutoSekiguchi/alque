@@ -69,8 +69,8 @@ const NewForm: (props: Props) => JSX.Element = (props: Props) => {
     const postQuestionData: PostQuestionDataType = {
       UID: user.ID,
       TID: selectTeamID,
-      QuestionImageURL: questionImageURL,
-      AnswerImageURL: answerImageURL,
+      QuestionImageUrl: questionImageURL,
+      AnswerImageUrl: answerImageURL,
       QuestionLevel: questionLevel,
       QuestionSentence: questionContext,
       AnswerSentence: answerContext,
