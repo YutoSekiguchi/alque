@@ -56,6 +56,15 @@ func InitRouter(db *gorm.DB) {
 		question.PUT("/:id", ctrl.HandlePutQuestion)
 	}
 
+	answer := e.Group("/answers")
+	{
+		answer.POST("", ctrl.HandlePostAnswer)
+		answer.GET("/:id", ctrl.HandleGetAnswerByID)
+		answer.GET("/uid/:uid", ctrl.HandleGetAnswersByUID)
+		answer.GET("/qid/:qid", ctrl.HandleGetAnswersByQID)
+		answer.GET("/tid/:tid", ctrl.HandleGetAnswersByTID)
+	}
+
 	// Routing
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, Echo!")

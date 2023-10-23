@@ -11,5 +11,6 @@ type AnswerContent struct {
 	UID           int       `gorm:"column:uid"`
 	PredImageUrl  string    `gorm:"type:text;not null"`
 	MatchAnswer   int       `gorm:"not null"`
+	QuestionLevel int			  `gorm:"not null"`
 	CreatedAt   time.Time `sql:"DEFAULT:current_timestamp;column:created_at"`
 }
