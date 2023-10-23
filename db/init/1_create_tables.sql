@@ -57,5 +57,6 @@ CREATE TABLE IF NOT EXISTS answer_contents (
   uid INT NOT NULL,
   pred_image_url TEXT NOT NULL,
   match_answer INT NOT NULL,
+  question_level FLOAT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
