@@ -5,6 +5,11 @@ import { TeamDataWithoutPasswordType } from "@/@types/team";
 import ModalImageLayout from "../../modal_image/layout";
 import { useState } from "react";
 import TextInput from "../../form/text_input/layout";
+import { getMatchAnswer } from "@/modules/get_match_answer";
+import { postAnswer } from "@/services/answer";
+import { PostAnswerDataType } from "@/@types/answer";
+import LoadingDialogLayout from "../../loading_dialog/layout";
+import CorrectDialog from "./correct_dialog";
 
 interface AnswerDialogLayoutProps {
   user: UserDataType;
@@ -27,23 +32,62 @@ const AnswerDialogLayout = (props: AnswerDialogLayoutProps) => {
 
   const [predictImageUrl, setPredictImageUrl] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isCorretAnswer, setIsCorrectAnswer] = useState<number>(-1);
 
   const handleChangePredictImageUrl = (newValue: string) => {
     setPredictImageUrl(newValue);
   }
 
   const handleSubmitAnswer = async() => {
-    // 予想画像を送信
+    // 提出中はボタンを押せないようにする
     setIsSubmitting(true);
+
     if (!urlRegex.test(predictImageUrl)) {
       alert("予想画像URLが不正です");
+      setIsSubmitting(false);
       return;
     }
 
-    setIsSubmitting(false);
+    const isMatch: number = getMatchAnswer(answerImageUrl, predictImageUrl);
+
+    // 予想画像URLを送信
+    try {
+    const postAnswerData: PostAnswerDataType = {
+      QID: questionID,
+      UID: user.ID,
+      PredImageUrl: predictImageUrl,
+      MatchAnswer: isMatch,
+      QuestionLevel: questionLevel,
+    }
+    const postAnswerRes = await postAnswer(postAnswerData, user.Mail);
+
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setIsCorrectAnswer(isMatch);
+    }, 3000);
+    } catch(e) {
+      alert("予想画像URLの送信に失敗しました");
+      setIsSubmitting(false);
+    }
   }
 
+  const handleCloseDialog = () => {
+    if (isCorretAnswer === 1) {
+      closeShowAnswerDialog();
+    }
+    handleChangePredictImageUrl("");
+    setIsCorrectAnswer(-1);
+  };
+
   return(
+    <>
+    {isSubmitting && <LoadingDialogLayout />}
+    {isCorretAnswer >= 0 && 
+      <CorrectDialog
+        handleCloseDialog={handleCloseDialog}
+        correct={isCorretAnswer===1? true: false}
+      />
+    }
     <div
       className="fixed top-0 left-0 w-full h-full dialog-background z-50 overflow-scroll"
       id="exampleModal"
@@ -99,6 +143,7 @@ const AnswerDialogLayout = (props: AnswerDialogLayoutProps) => {
         </div>
       </div>
     </div>
+    </>
   );
 }
 
