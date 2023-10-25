@@ -8,7 +8,7 @@ const CorrectDialog: (props: Props) => JSX.Element = (props: Props) => {
 
   // ダイアログ本体がクリックされたときに、外側のハンドラが発火するのを防ぐためのハンドラ
   const handleDialogClick = (e: React.MouseEvent) => {
-    // e.stopPropagation();
+    e.stopPropagation();
   };
 
   return (
