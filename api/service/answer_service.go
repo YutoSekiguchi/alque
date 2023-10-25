@@ -57,6 +57,24 @@ func (s AnswerService) GetAnswersByQID(db *gorm.DB, c echo.Context) ([]AnswerCon
 	return answer, nil
 }
 
+// qidとuidから取得
+func (s AnswerService) GetAnswersByQIDAndUID(db *gorm.DB, c echo.Context) ([]AnswerContent, error) {
+	authHeader := c.Request().Header.Get("Authorization")
+	u, err := new(UserService).Authenticate(authHeader, db, c)
+	if u == nil {
+		return nil, err
+	}
+	var answer []AnswerContent
+	qid := c.Param("qid")
+	uid := c.Param("uid")
+
+	if err := db.Table("answer_contents").Where("qid = ? AND uid = ?", qid, uid).Find(&answer).Error; err != nil {
+		return nil, err
+	}
+
+	return answer, nil
+}
+
 // tidから取得
 func (s AnswerService) GetAnswersByTID(db *gorm.DB, c echo.Context) ([]AnswerContent, error) {
 	authHeader := c.Request().Header.Get("Authorization")

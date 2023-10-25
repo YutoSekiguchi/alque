@@ -47,6 +47,19 @@ func (ctrl Controller) HandleGetAnswersByQID(c echo.Context) error {
 	}
 }
 
+// HandleGetAnswersByQIDAndUID GET /answers/qid/:qid/uid/:uid uidとqidが一致する回答を取得
+func (ctrl Controller) HandleGetAnswersByQIDAndUID(c echo.Context) error {
+	var s service.AnswerService
+	p, err := s.GetAnswersByQIDAndUID(ctrl.Db, c)
+	
+	if err != nil {
+		fmt.Println(err)
+		return c.JSON(http.StatusNotFound, err.Error())
+	} else {
+		return c.JSON(200, p)
+	}
+}
+
 // HandleGetAnswersByTID GET /answers/tid/:tid tidが一致する回答を取得
 func (ctrl Controller) HandleGetAnswersByTID(c echo.Context) error {
 	var s service.AnswerService
