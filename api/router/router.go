@@ -62,6 +62,7 @@ func InitRouter(db *gorm.DB) {
 		answer.GET("/:id", ctrl.HandleGetAnswerByID)
 		answer.GET("/uid/:uid", ctrl.HandleGetAnswersByUID)
 		answer.GET("/qid/:qid", ctrl.HandleGetAnswersByQID)
+		answer.GET("/qid/:qid/uid/:uid", ctrl.HandleGetAnswersByQIDAndUID)
 		answer.GET("/tid/:tid", ctrl.HandleGetAnswersByTID)
 	}
 
