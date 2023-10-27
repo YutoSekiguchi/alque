@@ -8,11 +8,14 @@ import { useEffect, useState } from "react";
 import QuestionCard from "../../common/article/layout";
 import { UserDataType } from "@/@types/user";
 import { TeamDataWithoutPasswordType } from "@/@types/team";
+import { myAnswerAtom } from "@/jotai/my_answer";
+import { getAnswersByUID } from "@/services/answer";
 
 const ArticleListLayout: () => JSX.Element = () => {
   const [articleList, setArticleList] = useState<{Question: QuestionDataType, User: UserDataType, TeamWithoutPassword: TeamDataWithoutPasswordType}[]>([]);
 
   const [user, ] = useAtom(userAtom);
+  const [myAnswers, setMyAnswers] = useAtom(myAnswerAtom);
 
   useEffect(() => {
     const getArticleList = async () => {
@@ -25,8 +28,9 @@ const ArticleListLayout: () => JSX.Element = () => {
       if (res === undefined || res === null) {
         return;
       }
-      console.log(res)
+      const myAnswerList = await getAnswersByUID(user.ID, user.Mail);
       setArticleList(res);
+      setMyAnswers(myAnswerList);
     };
     getArticleList();
   }

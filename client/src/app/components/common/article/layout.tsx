@@ -1,9 +1,14 @@
 import { TeamDataWithoutPasswordType } from "@/@types/team";
 import { UserDataType } from "@/@types/user";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StarsLayout from "./stars/layout";
 import ModalImageLayout from "../modal_image/layout";
 import MoveAnswerPageButton from "./move_answer_page_button/layout";
+import { myAnswerAtom } from "@/jotai/my_answer";
+import { useAtom } from "jotai";
+import { AnswerDataType } from "@/@types/answer";
+import { checkDate } from "@/modules/check_date";
+import ShowAnswerButton from "./show_answer_button/layout";
 
 interface Props {
   user: UserDataType;
@@ -24,13 +29,27 @@ const QuestionCard: (props: Props) => JSX.Element = (props: Props) => {
 
   const MAX_CONTEXT_LENGTH = 130;
 
+  const [myAnswer, ] = useAtom(myAnswerAtom);
+
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [articleAnswerData, setArticleAnswerData] = useState<AnswerDataType[]>([]);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+
   const displayQuestionContext = isExpanded? questionContext: questionContext.length > MAX_CONTEXT_LENGTH? questionContext.slice(0, MAX_CONTEXT_LENGTH) + "...": questionContext;
 
   // さらに表示ボタンを押したときの処理
   const handleClickExpandedButton = () => {
     setIsExpanded(true);
   }
+
+  useEffect(() => {
+    if (myAnswer !== null) {
+      setArticleAnswerData(myAnswer.filter((answer) => answer.QID === questionID));
+      // QIDが一致し，かつMatchAnswerが1のものがあるかどうか
+      const checkCorrect = myAnswer.some((answer) => answer.QID === questionID && answer.MatchAnswer === 1);
+      setIsCorrect(checkCorrect);
+    }
+  }, [myAnswer]);
 
   return(
     <div>
@@ -97,21 +116,51 @@ const QuestionCard: (props: Props) => JSX.Element = (props: Props) => {
             </div>
           </div>
           {
-            type === "prod" &&  
-            <div>
-              <MoveAnswerPageButton 
-                user={user}
-                group={group}
-                questionID={questionID}
-                questionImageUrl={questionImageUrl}
-                answerImageUrl={answerImageUrl}
-                questionContext={questionContext}
-                questionComment={questionComment}
-                questionHint={questionHint}
-                questionLevel={questionLevel}
-                questionDate={questionDate}
-              />
-            </div>
+            (type === "prod" && isCorrect !== null) &&
+            <>
+            {
+              !checkDate(questionDate)?
+              <>
+                {isCorrect?
+                  <div>
+                    <ShowAnswerButton
+                      text="正解済み"
+                      color="text-green-500"
+                      articleAnswerData={articleAnswerData}
+                      answerImageUrl={answerImageUrl}
+                      questionID={questionID}
+                    />
+                  </div>
+                  :
+                  <div>
+                    <MoveAnswerPageButton 
+                      user={user}
+                      group={group}
+                      questionID={questionID}
+                      questionImageUrl={questionImageUrl}
+                      answerImageUrl={answerImageUrl}
+                      questionContext={questionContext}
+                      questionComment={questionComment}
+                      questionHint={questionHint}
+                      questionLevel={questionLevel}
+                      questionDate={questionDate}
+                    />
+                  </div>
+                }
+              </>
+              :
+              <div>
+                <ShowAnswerButton
+                  text="答えを見る"
+                  color=""
+                  articleAnswerData={articleAnswerData}
+                  answerImageUrl={answerImageUrl}
+                  questionID={questionID}
+                />
+              </div>
+            }
+            
+            </>
           }
         </div>
         </div>
