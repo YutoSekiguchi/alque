@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@nivo/pie": "^0.83.0",
     "dotenv": "^16.3.1",
     "jotai": "^2.4.3",
     "next": "13.5.4",
