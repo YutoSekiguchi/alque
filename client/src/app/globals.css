@@ -55,6 +55,9 @@ body {
 .border-bottom {
   border-bottom: 0.2px solid rgb(var(--main-border-color));
 }
+.border-all {
+  border: 0.2px solid rgb(var(--main-border-color));
+}
 
 /* Group List */
 .group-list {
@@ -74,4 +77,16 @@ body {
 }
 .group-list-description {
   width: 70%;
+}
+
+.important_gray_text {
+  color: #aaa;
+}
+
+line {
+  stroke: #aaa !important;
+}
+
+text {
+  stroke: #aaa !important;
 }
