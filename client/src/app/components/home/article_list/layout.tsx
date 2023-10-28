@@ -15,7 +15,7 @@ const ArticleListLayout: () => JSX.Element = () => {
   const [articleList, setArticleList] = useState<{Question: QuestionDataType, User: UserDataType, TeamWithoutPassword: TeamDataWithoutPasswordType}[]>([]);
 
   const [user, ] = useAtom(userAtom);
-  const [myAnswers, setMyAnswers] = useAtom(myAnswerAtom);
+  const [, setMyAnswers] = useAtom(myAnswerAtom);
 
   useEffect(() => {
     const getArticleList = async () => {

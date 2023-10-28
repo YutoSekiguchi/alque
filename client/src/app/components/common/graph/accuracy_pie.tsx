@@ -11,10 +11,6 @@ interface Props {
 
 const AccuracyPie = (props: Props) => {
   const {data} = props;
-  useEffect(() => {
-    console.log(data);
-  
-  }, [])
   return (
     <ResponsivePie
         data={data}
