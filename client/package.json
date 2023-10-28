@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@nivo/bar": "^0.83.0",
+    "@nivo/calendar": "^0.83.0",
     "@nivo/pie": "^0.83.0",
     "dotenv": "^16.3.1",
     "jotai": "^2.4.3",
