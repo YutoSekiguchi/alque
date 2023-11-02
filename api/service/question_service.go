@@ -30,6 +30,9 @@ func (s QuestionService) GetQuestionByID(db *gorm.DB, c echo.Context) (*Question
 		return nil, err
 	}
 	isAuth := false
+	if question.TID == 0 {
+		isAuth = true
+	}
 	for _, m := range member {
 		// tidが一致したらisAuthをtrueにする
 		if string(rune(m.TID)) == string(rune(question.TID)) {
