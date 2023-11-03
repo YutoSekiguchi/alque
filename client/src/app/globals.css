@@ -39,6 +39,16 @@ body {
   background-color: rgb(var(--background-color));
 }
 
+.transparent-form {
+  overflow-y: hidden; /* 余分なスクロールバーを表示しないようにする */
+  resize: none;
+  background-color: rgba(var(--background-color), 1);
+}
+
+.transparent-form:focus {
+  outline: none;
+}
+
 .header-icon {
   color: rgb(var(--main-font-color));
   width: 30px;
@@ -50,13 +60,13 @@ body {
 }
 
 .border-right {
-  border-right: 0.2px solid rgb(var(--main-border-color));
+  border-right: 0.2px solid rgba(var(--main-border-color), 0.5);
 }
 .border-bottom {
-  border-bottom: 0.2px solid rgb(var(--main-border-color));
+  border-bottom: 0.2px solid rgba(var(--main-border-color), 0.5);
 }
 .border-all {
-  border: 0.2px solid rgb(var(--main-border-color));
+  border: 0.2px solid rgba(var(--main-border-color), 0.5);
 }
 
 /* Group List */
