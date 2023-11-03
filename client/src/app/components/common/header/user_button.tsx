@@ -37,7 +37,7 @@ const UserButton: () => JSX.Element = () => {
               height={40}
               className='rounded-full cursor-pointer mx-auto'
             />
-            <button onClick={() => signOut()}>ログアウト</button>
+            {/* <button onClick={() => signOut()}>ログアウト</button> */}
           </div>
         :
         <div>
