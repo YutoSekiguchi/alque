@@ -83,7 +83,7 @@ const GraphArea: () => JSX.Element = () => {
   return (
     <div className="p-2">
       {
-        (user!==null && user!==undefined) &&
+        (user!==null && user!==undefined && accuracy && totalCorrectCount) ?
         <>
           <div className="mt-2 mb-4">
             <MainScore accuracy={accuracy} totalCorrectCount={totalCorrectCount} />
@@ -101,6 +101,8 @@ const GraphArea: () => JSX.Element = () => {
             </div>
           }
         </>
+        :
+        <div className="text-center">まだ回答データがありません</div>
       }
     </div>
   );
