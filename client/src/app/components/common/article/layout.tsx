@@ -23,11 +23,12 @@ interface Props {
   questionHint?: string;
   questionLevel: number;
   questionDate: string;
+  reactionCount?: number;
   type: "demo" | "prod" | "detail";
 }
 
 const QuestionCard: (props: Props) => JSX.Element = (props: Props) => {
-  const { user, group, questionID, questionImageUrl, answerImageUrl, questionDate, questionContext, questionComment, questionHint, type, questionLevel } = props;
+  const { user, group, questionID, questionImageUrl, answerImageUrl, questionDate, questionContext, questionComment, questionHint, type, questionLevel, reactionCount } = props;
 
   const MAX_CONTEXT_LENGTH = 130;
 
@@ -119,10 +120,13 @@ const QuestionCard: (props: Props) => JSX.Element = (props: Props) => {
           </div>
           {
             type === "prod" &&
-            <div className="mb-2">
-              <Link href={`/detail/${questionID}/${group.ID}`}>
-                <HeroiconsOutlineChatBubbleOvalLeftEllipsis />
-              </Link>
+            <div className="mb-4 mt-2 flex">
+              <div className="flex items-center mr-1 text-gray-600 dark:text-gray-400">
+                <Link href={`/detail/${questionID}/${group.ID}`}>
+                  <HeroiconsOutlineChatBubbleOvalLeftEllipsis />
+                </Link>
+                <p className="text-xs ml-1">{reactionCount}</p>
+              </div>
             </div>
           }
           {

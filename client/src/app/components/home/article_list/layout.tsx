@@ -10,12 +10,27 @@ import { UserDataType } from "@/@types/user";
 import { TeamDataWithoutPasswordType } from "@/@types/team";
 import { myAnswerAtom } from "@/jotai/my_answer";
 import { getAnswersByUID } from "@/services/answer";
+import { ReactionCountDataType } from "@/@types/reaction";
 
-const ArticleListLayout: () => JSX.Element = () => {
+interface Props {
+  reactionCountData: ReactionCountDataType[];
+}
+
+const ArticleListLayout: (props: Props) => JSX.Element = (props: Props) => {
+  const { reactionCountData } = props;
   const [articleList, setArticleList] = useState<{Question: QuestionDataType, User: UserDataType, TeamWithoutPassword: TeamDataWithoutPasswordType}[]>([]);
 
   const [user, ] = useAtom(userAtom);
   const [, setMyAnswers] = useAtom(myAnswerAtom);
+
+  // reactionCountDataのQIDと一致する要素のCountを返す
+  const getReactionCount = (QID: number) => {
+    const reactionCount: ReactionCountDataType | undefined = reactionCountData.find((reactionCount) => reactionCount.QID === QID);
+    if (reactionCount === undefined) {
+      return 0;
+    }
+    return reactionCount.Count;
+  };
 
   useEffect(() => {
     const getArticleList = async () => {
@@ -54,6 +69,7 @@ const ArticleListLayout: () => JSX.Element = () => {
                 questionHint={article.Question.Hint}
                 questionLevel={article.Question.QuestionLevel}
                 questionDate={article.Question.Date}
+                reactionCount={getReactionCount(article.Question.ID)}
                 type="prod"
               />
             </div>

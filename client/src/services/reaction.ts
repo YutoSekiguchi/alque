@@ -26,6 +26,25 @@ export const getReactionsByQID = async (qid: number, mail: string) => {
   }
 }
 
+// GetReactionCountByQIDに対応
+export const getReactionCountByQID = async () => {
+  const url = `${REACTION_API_URL}/count`;
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+    });
+    if (!response.ok) {
+      console.log(response);
+      return null;
+    }
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("There was an error!", error);
+    return null;
+  }
+}
+
 // POST
 export const postReaction = async (data: PostReactionDataType, mail: string) => {
   const url = `${REACTION_API_URL}`;

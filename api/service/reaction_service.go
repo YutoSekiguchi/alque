@@ -39,6 +39,30 @@ func (s ReactionService) GetReactionsByQID(db *gorm.DB, c echo.Context) ([]React
 	return reactionWithUser, nil
 }
 
+// 全てのreactionをQIDごとにCount
+type ReactionCount struct {
+	QID int
+	Count int64
+}
+
+func (s ReactionService) GetReactionCountByQID(db *gorm.DB, c echo.Context) ([]ReactionCount, error) {
+	var reactionCount []ReactionCount
+	var reaction []Reaction
+	if err := db.Table("reactions").Find(&reaction).Error; err != nil {
+		return nil, err
+	}
+	for _, r := range reaction {
+		var count int64
+		if err := db.Table("reactions").Where("qid = ?", r.QID).Count(&count).Error; err != nil {
+			return nil, err
+		}
+		reactionCount = append(reactionCount, ReactionCount{QID: r.QID, Count: count})
+	}
+
+	return reactionCount, nil
+}
+
+
 // POST
 // リアクションを追加
 func (s ReactionService) CreateReaction(db *gorm.DB, c echo.Context) (*Reaction, error) {

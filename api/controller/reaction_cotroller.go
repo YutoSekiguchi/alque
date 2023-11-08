@@ -20,6 +20,18 @@ func (ctrl Controller) HandleGetReactionsByQID(c echo.Context) error {
 	}
 }
 
+func (ctrl Controller) HandleGetReactionCountByQID(c echo.Context) error {
+	var s service.ReactionService
+	p, err := s.GetReactionCountByQID(ctrl.Db, c)
+
+	if err != nil {
+		fmt.Println(err)
+		return c.JSON(http.StatusNotFound, err.Error())
+	} else {
+		return c.JSON(200, p)
+	}
+}
+
 func (ctrl Controller) HandleCreateReaction(c echo.Context) error {
 	var s service.ReactionService
 	p, err := s.CreateReaction(ctrl.Db, c)

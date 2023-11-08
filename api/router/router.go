@@ -70,6 +70,7 @@ func InitRouter(db *gorm.DB) {
 	{
 		reaction.POST("", ctrl.HandleCreateReaction)
 		reaction.GET("/qid/:qid", ctrl.HandleGetReactionsByQID)
+		reaction.GET("/count", ctrl.HandleGetReactionCountByQID)
 		reaction.DELETE("", ctrl.HandleDeleteReaction)
 		reaction.PUT("", ctrl.HandleUpdateReaction)
 	}

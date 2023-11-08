@@ -12,4 +12,9 @@ export interface ReactionWithUserDataType {
   User: UserDataType;
 }
 
+export interface ReactionCountDataType {
+  QID: number;
+  Count: number;
+}
+
 export interface ReactionDataType extends PostReactionDataType, IDAndCreatedAtType {}
