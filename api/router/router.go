@@ -75,6 +75,15 @@ func InitRouter(db *gorm.DB) {
 		reaction.PUT("", ctrl.HandleUpdateReaction)
 	}
 
+	favorite := e.Group("/favorites")
+	{
+		favorite.POST("", ctrl.HandlePostFavorite)
+		favorite.GET("/yours/qid/:qid/uid/:uid", ctrl.HandleGetFavoriteByQIDAndUID)
+		favorite.GET("/qid/:qid", ctrl.HandleGetFavoritesByQID)
+		favorite.GET("/count", ctrl.HandleGetFavoriteCountByQID)
+		favorite.DELETE("", ctrl.HandleDeleteFavorite)
+	}
+
 	// Routing
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, Echo!")

@@ -9,3 +9,4 @@ type Reaction model.Reaction
 type Team model.Team
 type TeamWithoutPassword model.TeamWithoutPassword
 type User model.User
+type Favorite model.Favorite
