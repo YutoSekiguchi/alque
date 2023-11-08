@@ -9,6 +9,8 @@ import { useAtom } from "jotai";
 import { AnswerDataType } from "@/@types/answer";
 import { checkDate } from "@/modules/check_date";
 import ShowAnswerButton from "./show_answer_button/layout";
+import { HeroiconsOutlineChatBubbleOvalLeftEllipsis } from "../../icons/chat";
+import Link from "next/link";
 
 interface Props {
   user: UserDataType;
@@ -21,7 +23,7 @@ interface Props {
   questionHint?: string;
   questionLevel: number;
   questionDate: string;
-  type: "demo" | "prod";
+  type: "demo" | "prod" | "detail";
 }
 
 const QuestionCard: (props: Props) => JSX.Element = (props: Props) => {
@@ -115,6 +117,14 @@ const QuestionCard: (props: Props) => JSX.Element = (props: Props) => {
               />
             </div>
           </div>
+          {
+            type === "prod" &&
+            <div className="mb-2">
+              <Link href={`/detail/${questionID}/${group.ID}`}>
+                <HeroiconsOutlineChatBubbleOvalLeftEllipsis />
+              </Link>
+            </div>
+          }
           {
             (type === "prod" && isCorrect !== null) &&
             <>
