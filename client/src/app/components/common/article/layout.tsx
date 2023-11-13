@@ -11,6 +11,10 @@ import { checkDate } from "@/modules/check_date";
 import ShowAnswerButton from "./show_answer_button/layout";
 import { HeroiconsOutlineChatBubbleOvalLeftEllipsis } from "../../icons/chat";
 import Link from "next/link";
+import { MaterialSymbolsFavorite } from "../../icons/favorite";
+import { MaterialSymbolsFavoriteOutline } from "../../icons/not_favorite";
+import { deleteFavorite, getFavoriteByQIDAndUID, postFavorite } from "@/services/favorite";
+import { FavoriteDataType, PostFavoriteDataType } from "@/@types/favorite";
 
 interface Props {
   user: UserDataType;
@@ -24,11 +28,12 @@ interface Props {
   questionLevel: number;
   questionDate: string;
   reactionCount?: number;
+  favoriteCount?: number;
   type: "demo" | "prod" | "detail";
 }
 
 const QuestionCard: (props: Props) => JSX.Element = (props: Props) => {
-  const { user, group, questionID, questionImageUrl, answerImageUrl, questionDate, questionContext, questionComment, questionHint, type, questionLevel, reactionCount } = props;
+  const { user, group, questionID, questionImageUrl, answerImageUrl, questionDate, questionContext, questionComment, questionHint, type, questionLevel, reactionCount, favoriteCount } = props;
 
   const MAX_CONTEXT_LENGTH = 130;
 
@@ -37,6 +42,9 @@ const QuestionCard: (props: Props) => JSX.Element = (props: Props) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [articleAnswerData, setArticleAnswerData] = useState<AnswerDataType[]>([]);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [favoriteData, setFavoriteData] = useState<FavoriteDataType | null>(null);
+  const [firstIsFavorite, setFirstIsFavorite] = useState<boolean>(false);
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
   const displayQuestionContext = isExpanded? questionContext: questionContext.length > MAX_CONTEXT_LENGTH? questionContext.slice(0, MAX_CONTEXT_LENGTH) + "...": questionContext;
 
@@ -45,14 +53,53 @@ const QuestionCard: (props: Props) => JSX.Element = (props: Props) => {
     setIsExpanded(true);
   }
 
+  // お気に入りボタンを押した時の処理
+  const hanldeClickFavoriteButton = async() => {
+    setIsFavorite(!isFavorite);
+  }
+
+  const handleGetFavorite = async() => {
+    const res = await getFavoriteByQIDAndUID(questionID, user.ID);
+    console.log(res);
+    if (res && res.length > 0) {
+      setIsFavorite(true);
+      setFirstIsFavorite(true);
+      setFavoriteData(res[0]);
+    }
+  }
+
   useEffect(() => {
     if (myAnswer !== null) {
       setArticleAnswerData(myAnswer.filter((answer) => answer.QID === questionID));
       // QIDが一致し，かつMatchAnswerが1のものがあるかどうか
       const checkCorrect = myAnswer.some((answer) => answer.QID === questionID && answer.MatchAnswer === 1);
+      handleGetFavorite();
       setIsCorrect(checkCorrect);
     }
   }, [myAnswer]);
+
+  const updateFavorite = async() => {
+    if (firstIsFavorite !== isFavorite) {
+      if (isFavorite) {
+        const data: PostFavoriteDataType = {
+          UID: user.ID,
+          QID: questionID,
+        }
+        await postFavorite(data);
+      } else {
+        // deleteFavorite function needs to be defined or imported
+        const data: FavoriteDataType = favoriteData as FavoriteDataType;
+        await deleteFavorite(data);
+      }
+    }
+  }
+
+  // ページ離脱時にお気に入りを更新する
+  useEffect(() => {
+    return () => { // Cleanup function for useEffect
+      updateFavorite();
+    };
+  }, [isFavorite, firstIsFavorite, questionID]);
 
   return(
     <div>
@@ -103,7 +150,29 @@ const QuestionCard: (props: Props) => JSX.Element = (props: Props) => {
               {questionHint}
             </div>
           }
-          <div className="group-question-card__body__group flex items-center justify-between mt-1 mb-2">
+          <div className="group-question-card__body__group flex items-center justify-between mt-2 mb-4">
+            {
+              type === "prod" &&
+              <div className="flex items-center justify-around">
+                <div className="flex items-center mr-1 text-gray-600 dark:text-gray-400">
+                  <Link href={`/detail/${questionID}/${group.ID}`}>
+                    <HeroiconsOutlineChatBubbleOvalLeftEllipsis />
+                  </Link>
+                  <p className="text-xs ml-1">{reactionCount}</p>
+                </div>
+                <div className="flex items-center mr-1 ml-4 text-gray-600 dark:text-gray-400">
+                  <div className="" onClick={hanldeClickFavoriteButton}>
+                    {
+                      isFavorite?
+                      <MaterialSymbolsFavorite />
+                      :
+                      <MaterialSymbolsFavoriteOutline />
+                    }
+                  </div>
+                  <p className="text-xs ml-1">{isFavorite? (favoriteCount || 0) + 1 : favoriteCount}</p>
+                </div>
+              </div>
+            }
             <div className="flex items-center">
               <div className="mr-2 flex items-center">
                 <div className="group-question-card__body__group__name text-xs mr-1 text-gray-600 dark:text-gray-400">
@@ -118,17 +187,7 @@ const QuestionCard: (props: Props) => JSX.Element = (props: Props) => {
               />
             </div>
           </div>
-          {
-            type === "prod" &&
-            <div className="mb-4 mt-2 flex">
-              <div className="flex items-center mr-1 text-gray-600 dark:text-gray-400">
-                <Link href={`/detail/${questionID}/${group.ID}`}>
-                  <HeroiconsOutlineChatBubbleOvalLeftEllipsis />
-                </Link>
-                <p className="text-xs ml-1">{reactionCount}</p>
-              </div>
-            </div>
-          }
+          
           {
             (type === "prod" && isCorrect !== null) &&
             <>

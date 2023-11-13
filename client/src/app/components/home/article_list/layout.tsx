@@ -11,25 +11,28 @@ import { TeamDataWithoutPasswordType } from "@/@types/team";
 import { myAnswerAtom } from "@/jotai/my_answer";
 import { getAnswersByUID } from "@/services/answer";
 import { ReactionCountDataType } from "@/@types/reaction";
+import { FavoriteCountDataType } from "@/@types/favorite";
 
 interface Props {
   reactionCountData: ReactionCountDataType[];
+  favoriteCountData: FavoriteCountDataType[];
 }
 
 const ArticleListLayout: (props: Props) => JSX.Element = (props: Props) => {
-  const { reactionCountData } = props;
+  const { reactionCountData, favoriteCountData } = props;
   const [articleList, setArticleList] = useState<{Question: QuestionDataType, User: UserDataType, TeamWithoutPassword: TeamDataWithoutPasswordType}[]>([]);
 
   const [user, ] = useAtom(userAtom);
   const [, setMyAnswers] = useAtom(myAnswerAtom);
 
-  // reactionCountDataのQIDと一致する要素のCountを返す
-  const getReactionCount = (QID: number) => {
-    const reactionCount: ReactionCountDataType | undefined = reactionCountData.find((reactionCount) => reactionCount.QID === QID);
-    if (reactionCount === undefined) {
-      return 0;
-    }
-    return reactionCount.Count;
+  // reactionCountDataとfavoriteCountDataのQIDと一致する要素のCountをそれぞれ返す
+  const getReactionCountAndFavoriteCount = (QID: number) => {
+    const reactionCount: ReactionCountDataType | undefined = reactionCountData === null? undefined: reactionCountData.find((reactionCount) => reactionCount.QID === QID);
+    const favoriteCount: FavoriteCountDataType | undefined = favoriteCountData === null? undefined: favoriteCountData.find((favoriteCount) => favoriteCount.QID === QID);
+    return {
+      reactionCount: reactionCount === undefined? 0: reactionCount.Count,
+      favoriteCount: favoriteCount === undefined? 0: favoriteCount.Count
+    };
   };
 
   useEffect(() => {
@@ -69,7 +72,8 @@ const ArticleListLayout: (props: Props) => JSX.Element = (props: Props) => {
                 questionHint={article.Question.Hint}
                 questionLevel={article.Question.QuestionLevel}
                 questionDate={article.Question.Date}
-                reactionCount={getReactionCount(article.Question.ID)}
+                reactionCount={getReactionCountAndFavoriteCount(article.Question.ID).reactionCount}
+                favoriteCount={getReactionCountAndFavoriteCount(article.Question.ID).favoriteCount}
                 type="prod"
               />
             </div>
