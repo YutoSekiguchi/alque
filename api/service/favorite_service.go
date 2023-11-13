@@ -57,7 +57,6 @@ func (s FavoriteService) GetFavoriteCountByQID(db *gorm.DB, c echo.Context) ([]F
 func (s FavoriteService) PostFavorite(db *gorm.DB, c echo.Context) (Favorite, error) {
 	var favorite Favorite
 	c.Bind(&favorite)
-
 	if err := db.Table("favorites").Create(&favorite).Error; err != nil {
 		return favorite, err
 	}
