@@ -13,7 +13,7 @@ const Header: () => JSX.Element = () => {
           <Image
             src="/icon.png"
             alt="アルクエ"
-            className="mx-auto rounded-full"
+            className="mx-auto rounded-full mb-4"
             width={60}
             height={60} />
           <ul>
