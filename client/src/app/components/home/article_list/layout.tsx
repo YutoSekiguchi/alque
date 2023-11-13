@@ -12,22 +12,26 @@ import { myAnswerAtom } from "@/jotai/my_answer";
 import { getAnswersByUID } from "@/services/answer";
 import { ReactionCountDataType } from "@/@types/reaction";
 import { FavoriteCountDataType } from "@/@types/favorite";
+import { getReactionCountByQID } from "@/services/reaction";
 
 interface Props {
-  reactionCountData: ReactionCountDataType[];
   favoriteCountData: FavoriteCountDataType[];
 }
 
 const ArticleListLayout: (props: Props) => JSX.Element = (props: Props) => {
-  const { reactionCountData, favoriteCountData } = props;
+  const { favoriteCountData } = props;
   const [articleList, setArticleList] = useState<{Question: QuestionDataType, User: UserDataType, TeamWithoutPassword: TeamDataWithoutPasswordType}[]>([]);
 
   const [user, ] = useAtom(userAtom);
   const [, setMyAnswers] = useAtom(myAnswerAtom);
+  const [reactionCountData, setReactionCountData] = useState<ReactionCountDataType[] | null>(null);
 
   // reactionCountDataとfavoriteCountDataのQIDと一致する要素のCountをそれぞれ返す
   const getReactionCountAndFavoriteCount = (QID: number) => {
+    console.log(reactionCountData)
+    console.log(QID)
     const reactionCount: ReactionCountDataType | undefined = reactionCountData === null? undefined: reactionCountData.find((reactionCount) => reactionCount.QID === QID);
+    console.log(reactionCount);
     const favoriteCount: FavoriteCountDataType | undefined = favoriteCountData === null? undefined: favoriteCountData.find((favoriteCount) => favoriteCount.QID === QID);
     return {
       reactionCount: reactionCount === undefined? 0: reactionCount.Count,
@@ -41,6 +45,11 @@ const ArticleListLayout: (props: Props) => JSX.Element = (props: Props) => {
         return;
       }
 
+      const reactionCountRes: ReactionCountDataType[] | null = await getReactionCountByQID();
+      if (reactionCountRes !== undefined && reactionCountRes !== null) {
+        setReactionCountData(reactionCountRes);
+      } 
+      
       // uidからユーザが所属してるグループの問題を取得
       const res = await getQuestionsInMyTeams(user.Mail);
       if (res === undefined || res === null) {

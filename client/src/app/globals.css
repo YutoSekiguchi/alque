@@ -32,6 +32,11 @@ body {
   padding: 1rem;
 }
 
+.theme-white {
+  background-color: rgb(240,245,248);
+  color: rgb(50, 50, 50);
+}
+
 .dialog-background {
   background: rgba(var(--dialog-background-color), 0.2);
 }

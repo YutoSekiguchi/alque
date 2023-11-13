@@ -43,7 +43,7 @@ const QuestionCard: (props: Props) => JSX.Element = (props: Props) => {
   const [articleAnswerData, setArticleAnswerData] = useState<AnswerDataType[]>([]);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [favoriteData, setFavoriteData] = useState<FavoriteDataType | null>(null);
-  const [firstIsFavorite, setFirstIsFavorite] = useState<boolean>(false);
+  const [clickFavoriteButtonCount, setClickFavoriteButtonCount] = useState<number | null>(null);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
   const displayQuestionContext = isExpanded? questionContext: questionContext.length > MAX_CONTEXT_LENGTH? questionContext.slice(0, MAX_CONTEXT_LENGTH) + "...": questionContext;
@@ -53,17 +53,10 @@ const QuestionCard: (props: Props) => JSX.Element = (props: Props) => {
     setIsExpanded(true);
   }
 
-  // お気に入りボタンを押した時の処理
-  const hanldeClickFavoriteButton = async() => {
-    setIsFavorite(!isFavorite);
-  }
-
   const handleGetFavorite = async() => {
     const res = await getFavoriteByQIDAndUID(questionID, user.ID);
-    console.log(res);
     if (res && res.length > 0) {
       setIsFavorite(true);
-      setFirstIsFavorite(true);
       setFavoriteData(res[0]);
     }
   }
@@ -79,27 +72,30 @@ const QuestionCard: (props: Props) => JSX.Element = (props: Props) => {
   }, [myAnswer]);
 
   const updateFavorite = async() => {
-    if (firstIsFavorite !== isFavorite) {
-      if (isFavorite) {
-        const data: PostFavoriteDataType = {
-          UID: user.ID,
-          QID: questionID,
-        }
-        await postFavorite(data);
-      } else {
-        // deleteFavorite function needs to be defined or imported
-        const data: FavoriteDataType = favoriteData as FavoriteDataType;
-        await deleteFavorite(data);
+    if (!isFavorite) {
+      const data: PostFavoriteDataType = {
+        UID: user.ID,
+        QID: questionID,
       }
+      await postFavorite(data);
+    } else {
+      // deleteFavorite function needs to be defined or imported
+      const data: FavoriteDataType = favoriteData as FavoriteDataType;
+      await deleteFavorite(data);
     }
+    setIsFavorite(!isFavorite)
   }
 
-  // ページ離脱時にお気に入りを更新する
+  const handleClickFavoriteButton = () => {
+    setClickFavoriteButtonCount(clickFavoriteButtonCount === null? 1: clickFavoriteButtonCount + 1);
+  }
+
   useEffect(() => {
-    return () => { // Cleanup function for useEffect
-      updateFavorite();
-    };
-  }, [isFavorite, firstIsFavorite, questionID]);
+    if (clickFavoriteButtonCount !== null) {
+    updateFavorite();
+    }
+  }
+  , [clickFavoriteButtonCount]);
 
   return(
     <div>
@@ -161,7 +157,7 @@ const QuestionCard: (props: Props) => JSX.Element = (props: Props) => {
                   <p className="text-xs ml-1">{reactionCount}</p>
                 </div>
                 <div className="flex items-center mr-1 ml-4 text-gray-600 dark:text-gray-400">
-                  <div className="" onClick={hanldeClickFavoriteButton}>
+                  <div className="" onClick={handleClickFavoriteButton}>
                     {
                       isFavorite?
                       <MaterialSymbolsFavorite />
@@ -169,7 +165,11 @@ const QuestionCard: (props: Props) => JSX.Element = (props: Props) => {
                       <MaterialSymbolsFavoriteOutline />
                     }
                   </div>
-                  <p className="text-xs ml-1">{isFavorite? (favoriteCount || 0) + 1 : favoriteCount}</p>
+                  <p className="text-xs ml-1">{
+                    isFavorite?
+                      (favoriteCount || 0) + 1
+                      : favoriteCount
+                  }</p>
                 </div>
               </div>
             }
@@ -192,9 +192,10 @@ const QuestionCard: (props: Props) => JSX.Element = (props: Props) => {
             (type === "prod" && isCorrect !== null) &&
             <>
             {
-              !checkDate(questionDate)?
+              checkDate(questionDate)?
               <>
-                {isCorrect?
+                {
+                  isCorrect?
                   <div>
                     <ShowAnswerButton
                       text="正解済み"
@@ -222,6 +223,17 @@ const QuestionCard: (props: Props) => JSX.Element = (props: Props) => {
                 }
               </>
               :
+              isCorrect?
+                  <div>
+                    <ShowAnswerButton
+                      text="正解済み"
+                      color="text-green-500"
+                      articleAnswerData={articleAnswerData}
+                      answerImageUrl={answerImageUrl}
+                      questionID={questionID}
+                    />
+                  </div>
+                  :
               <div>
                 <ShowAnswerButton
                   text="答えを見る"

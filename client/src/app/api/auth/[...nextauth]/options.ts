@@ -27,7 +27,7 @@ export const options: NextAuthOptions = {
         DisplayName: profile.name!,
         Mail: profile.email!,
         Image: params.user.image!,
-        Dark: 0,
+        Dark: 0, // 1: dark, 0: auto, -1: light
       };
       const userData = await signin(data);
       // TODO: imageが違う場合の処理も記述
