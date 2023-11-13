@@ -122,7 +122,8 @@ func (s QuestionService) GetQuestionsInMyTeams(db *gorm.DB, c echo.Context) ([]Q
 			return questionWithUser, err
 		}
 		
-		questionWithUser = append(questionWithUser, QuestionWithUser{q, user, teamWithoutPassword})
+		// questionWithUserの先頭に追加
+		questionWithUser = append([]QuestionWithUser{{q, user, teamWithoutPassword}}, questionWithUser...)
 	}
 	return questionWithUser, nil
 }
