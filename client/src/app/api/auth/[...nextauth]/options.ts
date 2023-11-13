@@ -27,10 +27,11 @@ export const options: NextAuthOptions = {
         DisplayName: profile.name!,
         Mail: profile.email!,
         Image: params.user.image!,
-        Dark: 0, // 1: dark, 0: auto, -1: light
+        Dark: 0,
       };
       const userData = await signin(data);
       // TODO: imageが違う場合の処理も記述
+      console.log(userData);
       if (userData === null || userData === undefined) {
         return Promise.resolve(false);
       }

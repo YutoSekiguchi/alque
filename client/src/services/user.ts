@@ -53,6 +53,7 @@ export const signin = async (data: PostUserDataType) => {
   const existUser = await getUserByMail(data.Mail);
   if (existUser !== null) {
     isExist = true;
+    return existUser;
   }
   if (!isExist) {
     const url = `${USER_API_URL}`;

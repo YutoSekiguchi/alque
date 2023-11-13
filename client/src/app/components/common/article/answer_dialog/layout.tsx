@@ -64,6 +64,7 @@ const AnswerDialogLayout = (props: AnswerDialogLayoutProps) => {
     setTimeout(() => {
       setIsSubmitting(false);
       setIsCorrectAnswer(isMatch);
+      isMatch === 1 && closeShowAnswerDialog();
     }, 3000);
     } catch(e) {
       alert("予想画像URLの送信に失敗しました");

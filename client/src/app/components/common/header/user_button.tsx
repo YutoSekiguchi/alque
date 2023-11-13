@@ -5,11 +5,14 @@ import { getUserByMail } from '@/services/user';
 import { useAtom } from 'jotai';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { MaterialSymbolsLogout } from '../../icons/logout';
 
 const UserButton: () => JSX.Element = () => {
   const { data: session } = useSession();
   const [user, setUser] = useAtom(userAtom);
+
+  const [openNavbar, setOpenNavbar] = useState<boolean>(false);
 
   useEffect(() => {
     const getUserData = async() => {
@@ -24,20 +27,32 @@ const UserButton: () => JSX.Element = () => {
     getUserData();
   }, [session?.user])
 
+  const handleClickUserButton = () => {
+    setOpenNavbar(!openNavbar);
+  }
+
   return(
     <>
     {
         // セッションがある場合、ログアウトを表示
         session && session.user?.image !== null && session.user && session.user.image? 
-          <div>
+          <div className='relative'>
             <Image
               src={session.user?.image}
               alt={"ユーザ画像"}
               width={40}
               height={40}
               className='rounded-full cursor-pointer mx-auto'
+              onClick={() => handleClickUserButton()}
             />
-            {/* <button onClick={() => signOut()}>ログアウト</button> */}
+            {openNavbar && (
+              <div className='absolute bottom-0 w-40 mb-12 py-2 dark:bg-gray-700 bg-gray-50 border rounded shadow-xl'>
+                <button onClick={() => signOut()} className='px-4 py-2 text-sm w-full capitalize hover:dark:bg-gray-600 hover:bg-gray-200 flex items-center'>
+                  <MaterialSymbolsLogout className='mr-3' />
+                  ログアウト
+                </button>
+              </div>
+            )}
           </div>
         :
         <div>
