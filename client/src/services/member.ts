@@ -39,7 +39,6 @@ export const getMembersByTID = async (tid: number) => {
 };
 
 export const postMember = async (data: PostMemberDataType) => {
-  console.log(data);
   try {
     const response = await fetch(MEMBER_API_URL, {
       method: "POST",

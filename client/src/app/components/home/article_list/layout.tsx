@@ -13,6 +13,7 @@ import { getAnswersByUID } from "@/services/answer";
 import { ReactionCountDataType } from "@/@types/reaction";
 import { FavoriteCountDataType } from "@/@types/favorite";
 import { getReactionCountByQID } from "@/services/reaction";
+import LoadingDialogLayout from "../../common/loading_dialog/layout";
 
 interface Props {
   favoriteCountData: FavoriteCountDataType[];
@@ -28,16 +29,23 @@ const ArticleListLayout: (props: Props) => JSX.Element = (props: Props) => {
 
   // reactionCountDataとfavoriteCountDataのQIDと一致する要素のCountをそれぞれ返す
   const getReactionCountAndFavoriteCount = (QID: number) => {
-    console.log(reactionCountData)
-    console.log(QID)
     const reactionCount: ReactionCountDataType | undefined = reactionCountData === null? undefined: reactionCountData.find((reactionCount) => reactionCount.QID === QID);
-    console.log(reactionCount);
     const favoriteCount: FavoriteCountDataType | undefined = favoriteCountData === null? undefined: favoriteCountData.find((favoriteCount) => favoriteCount.QID === QID);
     return {
       reactionCount: reactionCount === undefined? 0: reactionCount.Count,
       favoriteCount: favoriteCount === undefined? 0: favoriteCount.Count
     };
   };
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000); // 2秒後にローディングを非表示にする
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const getArticleList = async () => {
@@ -49,7 +57,7 @@ const ArticleListLayout: (props: Props) => JSX.Element = (props: Props) => {
       if (reactionCountRes !== undefined && reactionCountRes !== null) {
         setReactionCountData(reactionCountRes);
       } 
-      
+
       // uidからユーザが所属してるグループの問題を取得
       const res = await getQuestionsInMyTeams(user.Mail);
       if (res === undefined || res === null) {
@@ -88,6 +96,9 @@ const ArticleListLayout: (props: Props) => JSX.Element = (props: Props) => {
             </div>
           );
         })
+      }
+      {
+        (user==null || user==undefined || isLoading) && <LoadingDialogLayout alpha={true} />
       }
     </div>
   );

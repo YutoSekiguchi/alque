@@ -31,7 +31,7 @@ export const options: NextAuthOptions = {
       };
       const userData = await signin(data);
       // TODO: imageが違う場合の処理も記述
-      console.log(userData);
+      userData;
       if (userData === null || userData === undefined) {
         return Promise.resolve(false);
       }

@@ -8,7 +8,6 @@ const TextInput: (props: Props) => JSX.Element = (props: Props) => {
   const { label, placeHolder, handleChangeValue } = props;
   const handleInputChange = (event: any) => {
     const value = event.target.value;
-    console.log(value);
     handleChangeValue(value);
   };
   return (
