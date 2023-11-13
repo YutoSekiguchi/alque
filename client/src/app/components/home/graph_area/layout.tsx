@@ -85,7 +85,7 @@ const GraphArea: () => JSX.Element = () => {
       {
         (user!==null && user!==undefined && accuracy && totalCorrectCount) ?
         <>
-          <div className="mt-2 mb-4">
+          <div className="mt-12 mb-4">
             <MainScore accuracy={accuracy} totalCorrectCount={totalCorrectCount} />
           </div>
           {
